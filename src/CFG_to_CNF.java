@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.Array;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -15,6 +16,8 @@ public class CFG_to_CNF
 	
 	public static class Converter
 	{
+		char[] Alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+		ArrayList<Character> currectChar = new ArrayList<Character>();
 		ArrayList<String> CNF =  new ArrayList<String>();
 		
 		public Converter()
@@ -24,7 +27,7 @@ public class CFG_to_CNF
 		
 		public ArrayList<String> convert(ArrayList<String> original)
 		{
-			Line[] temp = new Line[original.size()+1];
+			Line[] temp = new Line[original.size()];
 			
 			
 			for(int i = 0; i < original.size(); i++)
@@ -44,24 +47,35 @@ public class CFG_to_CNF
 					return CNF = null;
 				}
 				
-				temp[i+1] = new Line(original.get(i));
+				temp[i] = new Line(original.get(i));
+				
+				for(int l = 0; l < original.get(i).length(); i++){
+					if(Character.isUpperCase(original.get(i).charAt(l))){
+						if(!currectChar.contains(original.get(i).charAt(l))){
+							currectChar.add(original.get(i).charAt(l));
+						}
+						
+					}
+				}
 				
 				//CNF.add(original.get(i));
 			}
 			
 			//special case: Start Variable
-			int first = temp[1].str.indexOf('>') + 1;
-			if (temp[1].indexesOfDelimiters == null)
+			int first = temp[0].str.indexOf('>') + 1;
+			if (temp[0].indexesOfDelimiters == null)// without delimiters
 			{
-				temp[1].sectionsOfLine.add(new Section(temp[1].str.substring(first)));
-				if(temp[1].sectionsOfLine.get(0) == null)
+				temp[0].sectionsOfLine.add(new Section(temp[0].str.substring(first)));
+				
+				if(temp[0].sectionsOfLine.get(0) == null)
 				{
-					CNF.add("S0->");
+					CNF.add("S->");
 				}
-				else if(temp[1].sectionsOfLine.get(0).characters.size() < 2)
+				else if(temp[0].sectionsOfLine.get(0).characters.size() < 2)
 				{
-					CNF.add("S0->" + temp[1].sectionsOfLine.get(0).characters.get(0));
-					if(!temp[1].sectionsOfLine.get(0).characters.get(0).equals('\\'))
+					CNF.add("S->" + temp[0].sectionsOfLine.get(0).characters.get(0));
+					
+					if(!temp[0].sectionsOfLine.get(0).characters.get(0).equals('\\'))
 					{
 						CNF.add(original.get(0));
 					}
@@ -69,25 +83,114 @@ public class CFG_to_CNF
 						CNF.add(original.get(0).substring(0,original.get(0).indexOf('>')+1));
 					}
 				}
+				else if(temp[0].sectionsOfLine.get(0).characters.size() > 2 && temp[0].sectionsOfLine.get(0).characters.size() < 4)
+				{
+					
+				}
 				
 			}
-			
-			for(int i = 1; i < original.size(); i++)
+			else// with delimiters
 			{
-//				int begin = temp[i+1].str.indexOf('>') + 1;
-//				if (temp[i+1].indexesOfDelimiters == null)
-//				{
-//					temp[i+1].sectionsOfLine.add(new Section(temp[i+1].str.substring(first)));
-//				}
-				CNF.add(original.get(i));
+				for(int k = 0; k < temp[0].indexesOfDelimiters.size(); k++)
+				{
+					if(k == 0)
+					{
+						temp[0].sectionsOfLine.add(new Section(temp[0].str.substring(first, temp[0].indexesOfDelimiters.get(k))));
+					}
+					else
+					{
+						temp[0].sectionsOfLine.add(new Section(temp[0].str.substring(temp[0].indexesOfDelimiters.get(k-1), temp[0].indexesOfDelimiters.get(k))));
+					}
+				}
+			}
+			
+			char tempChar = '0';
+			
+			for(int i = original.size()-1; i > 0; i--)
+			{
+				int begin = temp[i].str.indexOf('>') + 1;
+				for(int k = 0; k < temp[0].indexesOfDelimiters.size(); k++)
+				{
+					if(k == 0)
+					{
+						temp[i].sectionsOfLine.add(new Section(temp[i].str.substring(begin, temp[i].indexesOfDelimiters.get(k))));
+					}
+					else
+					{
+						temp[i].sectionsOfLine.add(new Section(temp[i].str.substring(temp[i].indexesOfDelimiters.get(k-1), temp[i].indexesOfDelimiters.get(k))));
+					}
+				}
 				
+				for(int j = 0; j < temp[i].sectionsOfLine.size(); j++)
+				{
+					for(int p = 0; p < temp[i].sectionsOfLine.get(j).characters.size(); p++)
+					{
+						if(temp[i].sectionsOfLine.get(j).characters.get(p) == '\\')
+						{
+							tempChar = temp[i].str.charAt(0);
+							
+						}
+					}
+				}
+				if(tempChar != '0')
+				{
+					for(int k = 0; k < original.size(); k++)
+					{
+						for(int j = 0; j < temp[k].sectionsOfLine.size(); j++)
+						{
+							if(temp[k].sectionsOfLine.get(j).characters.contains(tempChar))
+							{
+								int tempIndex = temp[k].sectionsOfLine.get(j).characters.indexOf(tempChar);
+								
+								if(tempIndex == 0 && temp[k].sectionsOfLine.get(j).characters.size() == 1){
+									temp[k].sectionsOfLine.add(new Section("\\"));
+								}
+								else if(tempIndex == 0 && temp[k].sectionsOfLine.get(j).characters.size() == 2)
+								{
+									String tempString = temp[k].sectionsOfLine.get(j).characters.toString().replaceAll("[,\\s\\[\\]]", "");
+									temp[k].sectionsOfLine.add(new Section("" + tempString.substring(1)));
+								}
+								else if(tempIndex != 0 && temp[k].sectionsOfLine.get(j).characters.size() == 2)
+								{
+									String tempString = temp[k].sectionsOfLine.get(j).characters.toString().replaceAll("[,\\s\\[\\]]", "");
+									temp[k].sectionsOfLine.add(new Section("" + tempString.substring(0, 1)));
+								}
+								else if(tempIndex != 0 && temp[k].sectionsOfLine.get(j).characters.size() > 2)
+								{
+									String tempString = temp[k].sectionsOfLine.get(j).characters.toString().replaceAll("[,\\s\\[\\]]", "");
+									temp[k].sectionsOfLine.add(new Section("" + tempString.substring(0, tempIndex) + tempString.substring(tempIndex+1)));
+								}
+							}
+						}
+					}
+				}	
 			}
 			
 			
+			//CNF.add(original.get(i));
 			
 			return CNF;
-		}
+		}// Convert
 		
+		public char getNextChar()
+		{
+			char nextChar = 'A';
+			int count = 0;
+			
+			while(count < Alphabet.length){
+				if(currectChar.contains(nextChar)){
+					nextChar = Alphabet[count];
+					count++;
+				}
+				else
+				{
+					return nextChar;
+				}
+			}
+			
+			
+			return '0';
+		}
 	}
 	
 	public static class Line{
