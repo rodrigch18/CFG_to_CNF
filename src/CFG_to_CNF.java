@@ -20,10 +20,10 @@ public class CFG_to_CNF
 	 */
 	public static class Converter
 	{
-		//INSTANCE VARIABLES//
+		// INSTANCE VARIABLES//
 		char[] Alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
 				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' }; // alphabet array
-		//check track of used Variables
+		// check track of used Variables
 		ArrayList<Character> currectChar = new ArrayList<Character>();
 		ArrayList<String> CNF = new ArrayList<String>();// final string
 		int size;// size of temp array from string manipulation
@@ -653,7 +653,7 @@ public class CFG_to_CNF
 
 			return CNF;
 		}// Convert
-		
+
 		/*
 		 * getNextChar
 		 * 
@@ -664,7 +664,7 @@ public class CFG_to_CNF
 		 */
 		public char getNextChar()
 		{
-			//LOCAL VARIABLES//
+			// LOCAL VARIABLES//
 			char nextChar = 'A';
 			int count = 0;
 
@@ -686,7 +686,8 @@ public class CFG_to_CNF
 		/*
 		 * checkForEpsilon
 		 * 
-		 * Check if the temp array containing the current lines still has an epsilon
+		 * Check if the temp array containing the current lines still has an
+		 * epsilon
 		 * 
 		 * @param temp arrayList of Lies
 		 * 
@@ -713,7 +714,8 @@ public class CFG_to_CNF
 		/*
 		 * fixStrings
 		 * 
-		 * Run through the Sections of each line and update the string variable of each line based on the Sections
+		 * Run through the Sections of each line and update the string variable
+		 * of each line based on the Sections
 		 * 
 		 * @param temp arrayList of Lines
 		 * 
@@ -769,7 +771,8 @@ public class CFG_to_CNF
 		/*
 		 * updateDelimiters
 		 * 
-		 * update the delimiters list for the new lines creates for new chars on the LHS
+		 * update the delimiters list for the new lines creates for new chars on
+		 * the LHS
 		 * 
 		 * @param temp arrayList of Lines
 		 * 
@@ -850,7 +853,7 @@ public class CFG_to_CNF
 	 */
 	public static class Line
 	{
-		//INSTANCE VARIABLES//
+		// INSTANCE VARIABLES//
 		public String str;
 		ArrayList<Integer> indexesOfDelimiters;
 		ArrayList<Section> sectionsOfLine;
@@ -902,7 +905,7 @@ public class CFG_to_CNF
 	 */
 	public static class Section
 	{
-		//INSTANCE VARIABLES//
+		// INSTANCE VARIABLES//
 		ArrayList<Character> characters;
 		String part;
 
