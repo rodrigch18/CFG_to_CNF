@@ -36,15 +36,25 @@ public class CFG_to_CNF
 				if (!Character.isLetter(original.get(i).charAt(0)))
 				{
 					return CNF = null;
-				} else if (!Character.isUpperCase(original.get(i).charAt(0)))
+				} 
+				else if (!Character.isUpperCase(original.get(i).charAt(0)))
 				{
 					return CNF = null;
-				} else if (original.get(i).charAt(1) != '-')
+				} 
+				else if (original.get(i).charAt(1) != '-')
 				{
 					return CNF = null;
-				} else if (original.get(i).charAt(2) != '>')
+				} 
+				else if (original.get(i).charAt(2) != '>')
 				{
 					return CNF = null;
+				}
+				else if (original.get(0).charAt(3) == '\\')
+				{
+					CNF.add("S0->\\");
+					String One = original.get(0).substring(0, original.get(0).indexOf('>') + 1);
+					CNF.add(One);
+					return CNF;
 				}
 
 				temp.add(new Line(original.get(i)));
@@ -60,59 +70,7 @@ public class CFG_to_CNF
 
 					}
 				}
-
-				// CNF.add(original.get(i));
 			}
-
-			// //special case: Start Variable
-			// int first = temp[0].str.indexOf('>') + 1;
-			// if (temp[0].indexesOfDelimiters == null)// without delimiters
-			// {
-			// temp[0].sectionsOfLine.add(new
-			// Section(temp[0].str.substring(first)));
-			//
-			// if(temp[0].sectionsOfLine.get(0) == null)
-			// {
-			// CNF.add("S0->");
-			// }
-			// else if(temp[0].sectionsOfLine.get(0).characters.size() < 2)
-			// {
-			// CNF.add("S0->" +
-			// temp[0].sectionsOfLine.get(0).characters.get(0));
-			//
-			// if(!temp[0].sectionsOfLine.get(0).characters.get(0).equals('\\'))
-			// {
-			// CNF.add(original.get(0));
-			// }
-			// else{
-			// CNF.add(original.get(0).substring(0,original.get(0).indexOf('>')+1));
-			// }
-			// }
-			// else if(temp[0].sectionsOfLine.get(0).characters.size() > 2 &&
-			// temp[0].sectionsOfLine.get(0).characters.size() < 4)
-			// {
-			//
-			// }
-			//
-			// }
-			// else// with delimiters
-			// {
-			// for(int k = 0; k < temp[0].indexesOfDelimiters.size(); k++)
-			// {
-			// if(k == 0)
-			// {
-			// temp[0].sectionsOfLine.add(new
-			// Section(temp[0].str.substring(first,
-			// temp[0].indexesOfDelimiters.get(k))));
-			// }
-			// else
-			// {
-			// temp[0].sectionsOfLine.add(new
-			// Section(temp[0].str.substring(temp[0].indexesOfDelimiters.get(k-1),
-			// temp[0].indexesOfDelimiters.get(k))));
-			// }
-			// }
-			// }
 
 			// Populate Section of Line array with each lines respective sections
 			for (int i = temp.size() - 1; i >= 0; i--)
@@ -173,7 +131,7 @@ public class CFG_to_CNF
 							break;
 						}
 					}
-					if (flag)
+					if (flag || !check)
 					{
 						flag = false;
 						break;
@@ -341,9 +299,9 @@ public class CFG_to_CNF
 							char newCharLHS = getNextChar();
 
 							temp.add(new Line("" + newCharLHS + "->" + temp.get(i).sectionsOfLine.get(j).part.substring(temp.get(i).sectionsOfLine.get(j).part.length()-2 - (count*2), temp.get(i).sectionsOfLine.get(j).part.length() - (count*2))));
-							
+
 							String sample = temp.get(i).sectionsOfLine.get(j).part.substring(temp.get(i).sectionsOfLine.get(j).part.length()-2 - (count*2), temp.get(i).sectionsOfLine.get(j).part.length() - (count*2));
-							
+
 
 							temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(i).sectionsOfLine.get(j).part.substring(0, math*2 -1) + newCharLHS));
 
@@ -353,17 +311,17 @@ public class CFG_to_CNF
 								{
 									if(temp.get(q).sectionsOfLine.get(k).part.length() > 2)
 									{
-											
-											if(temp.get(q).sectionsOfLine.get(k).part.contains(sample))
-											{
-												temp.get(q).sectionsOfLine.set(k, new Section("" + temp.get(q).sectionsOfLine.get(k).part.substring(0, math*2 -1) + newCharLHS));
-											}
-											
+
+										if(temp.get(q).sectionsOfLine.get(k).part.contains(sample))
+										{
+											temp.get(q).sectionsOfLine.set(k, new Section("" + temp.get(q).sectionsOfLine.get(k).part.substring(0, math*2 -1) + newCharLHS));
+										}
+
 									}
 								}
 							}
-							
-							
+
+
 
 							for (int b = 0; b < temp.size(); b++)
 							{
@@ -412,34 +370,34 @@ public class CFG_to_CNF
 					}
 				}
 			}
-			
-			
+
+
 			for (int i = 0; i < temp.size(); i++)
 			{
 				for (int j = 0; j < temp.get(i).sectionsOfLine.size(); j++)
 				{
-//					if(temp.get(i).sectionsOfLine.get(j).part.length() == 1)
-//					{
-//						if(Character.isUpperCase(temp.get(i).sectionsOfLine.get(j).characters.get(0)))
-//						{
-//							for (int h = 0; h < temp.size(); h++)
-//							{
-//								if(temp.get(h).str.charAt(0) == temp.get(i).sectionsOfLine.get(j).characters.get(0))
-//								{
-//									if(temp.get(h).sectionsOfLine.size() == 1)
-//									{
-//										if (temp.get(h).sectionsOfLine.get(0).part.length() == 1)
-//										{
-//											if (Character.isLowerCase(temp.get(h).sectionsOfLine.get(0).part.charAt(0)))
-//											{
-//												temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(h).sectionsOfLine.get(0).part.charAt(0)));
-//											}
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
+					if(temp.get(i).sectionsOfLine.get(j).part.length() == 1)
+					{
+						if(Character.isUpperCase(temp.get(i).sectionsOfLine.get(j).characters.get(0)))
+						{
+							for (int h = 0; h < temp.size(); h++)
+							{
+								if(temp.get(h).str.charAt(0) == temp.get(i).sectionsOfLine.get(j).characters.get(0))
+								{
+									if(temp.get(h).sectionsOfLine.size() == 1)
+									{
+										if (temp.get(h).sectionsOfLine.get(0).part.length() == 1)
+										{
+											if (Character.isLowerCase(temp.get(h).sectionsOfLine.get(0).part.charAt(0)))
+											{
+												temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(h).sectionsOfLine.get(0).part.charAt(0)));
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 					if(temp.get(i).sectionsOfLine.get(j).part.length() == 2)
 					{
 						boolean upper = false;
@@ -450,7 +408,7 @@ public class CFG_to_CNF
 							if(Character.isUpperCase(temp.get(i).sectionsOfLine.get(j).characters.get(k)))
 							{
 								upper = true;
-								
+
 							}
 							if(Character.isLowerCase(temp.get(i).sectionsOfLine.get(j).characters.get(k)))
 							{
@@ -462,65 +420,76 @@ public class CFG_to_CNF
 						{
 							char newCharLHS = getNextChar();
 
+							char sample = '0';
+
+
 							temp.add(new Line("" + newCharLHS + "->" + temp.get(i).sectionsOfLine.get(j).characters.get(lowerIndex)));
-							
-							String sample = "";
+							sample = temp.get(i).sectionsOfLine.get(j).characters.get(lowerIndex);
+
+
+
 							if(lowerIndex == 0)
 							{
-								sample = temp.get(i).sectionsOfLine.get(j).part.substring(0, 1);
+
 								temp.get(i).sectionsOfLine.set(j, new Section("" + newCharLHS + temp.get(i).sectionsOfLine.get(j).part.substring(1)));
 							}
 							else
 							{
-								sample = temp.get(i).sectionsOfLine.get(j).part.substring(1);
 								temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(i).sectionsOfLine.get(j).part.substring(0, 1) + newCharLHS));
 							}
-							
+
 							upper = false;
 							lower = false;
-							
-							for (int q = 0; q < temp.size(); q++)
+
+							for (int m = 0; m < temp.size(); m++)
 							{
-								for (int k = 0; k < temp.get(q).sectionsOfLine.size(); k++)
+								for (int n = 0; n < temp.get(m).sectionsOfLine.size(); n++)
 								{
-									if(temp.get(q).sectionsOfLine.get(k).part.length() == 2 && temp.get(q).sectionsOfLine.get(k).part.contains(sample))
+									if(temp.get(m).sectionsOfLine.get(n).part.length() == 2 && (temp.get(m).sectionsOfLine.get(n).characters.get(0) == sample || temp.get(m).sectionsOfLine.get(n).characters.get(1) == sample))
 									{
+
 										boolean upper1 = false;
 										boolean lower1 = false;
 										int lowerIndex1 = -1;
-										for (int k1 = 0; k1 < temp.get(i).sectionsOfLine.get(j).characters.size(); k1++)
+										for (int k = 0; k < temp.get(m).sectionsOfLine.get(n).characters.size(); k++)
 										{
-											if(Character.isUpperCase(temp.get(i).sectionsOfLine.get(j).characters.get(k1)))
+
+											if(Character.isUpperCase(temp.get(m).sectionsOfLine.get(n).characters.get(k)))
 											{
+
 												upper1 = true;
-												
+
 											}
-											if(Character.isLowerCase(temp.get(i).sectionsOfLine.get(j).characters.get(k1)))
+											if(Character.isLowerCase(temp.get(m).sectionsOfLine.get(n).characters.get(k)))
 											{
+
 												lower1 = true;
-												lowerIndex1 = k1;
+												lowerIndex1 = k;
+
 											}
 										}
 										if(upper1 && lower1)
 										{
+
 											if(lowerIndex1 == 0)
 											{
-												temp.get(q).sectionsOfLine.set(k, new Section("" + newCharLHS + temp.get(q).sectionsOfLine.get(k).part.substring(1)));
+
+												temp.get(m).sectionsOfLine.set(n, new Section("" + newCharLHS + temp.get(m).sectionsOfLine.get(n).part.substring(1)));
 											}
 											else
 											{
-												temp.get(q).sectionsOfLine.set(k, new Section("" + temp.get(q).sectionsOfLine.get(k).part.substring(0, 1) + newCharLHS));
+												temp.get(m).sectionsOfLine.set(n, new Section("" + temp.get(m).sectionsOfLine.get(n).part.substring(0, 1) + newCharLHS));
 											}
-											
-											upper = false;
-											lower = false;
+
 										}
-											
+
 									}
+									upper = false;
+									lower = false;
 								}
 							}
-							
-							
+
+
 
 							for (int b = 0; b < temp.size(); b++)
 							{
@@ -566,11 +535,177 @@ public class CFG_to_CNF
 							}
 						}
 						
+						int found0m = -1;
+						int found0n = -1;
+						int found1m = -1;
+						int found1n = -1;
+						if(!upper && lower)
+						{
+							for (int m = 0; m < temp.size(); m++)
+							{
+								for (int n = 0; n < temp.get(m).sectionsOfLine.size(); n++)
+								{
+									if(temp.get(m).sectionsOfLine.get(n).part.length() == 1 && temp.get(m).sectionsOfLine.size() == 1)
+									{
+										if(temp.get(m).sectionsOfLine.get(n).characters.get(0) == temp.get(i).sectionsOfLine.get(j).characters.get(0))
+										{
+											found0m = m;
+											found0n = n;
+										}
+										if (temp.get(m).sectionsOfLine.get(n).characters.get(0) == temp.get(i).sectionsOfLine.get(j).characters.get(1))
+										{
+											found1m = m;
+											found1n = n;
+										}
+
+									}
+								}
+							}
+							
+							if(found0m != -1)
+							{
+								
+								temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(found0m).str.charAt(0) + temp.get(i).sectionsOfLine.get(j).part.substring(1)));
+								
+							}
+							else
+							{
+								char newChar = getNextChar();
+								temp.get(i).sectionsOfLine.set(j, new Section("" + newChar + temp.get(i).sectionsOfLine.get(j).part.substring(1)));
+								
+								for (int b = 0; b < temp.size(); b++)
+								{
+									for (int l = 0; l < temp.get(b).sectionsOfLine.size(); l++)
+									{
+										for (int g = 0; g < temp.get(b).sectionsOfLine.get(l).characters.size(); l++)
+										{
+											if (Character.isUpperCase(temp.get(b).sectionsOfLine.get(l).characters.get(g)))
+											{
+												if (!currectChar.contains(temp.get(b).sectionsOfLine.get(l).characters.get(g)))
+												{
+													currectChar.add(temp.get(b).sectionsOfLine.get(l).characters.get(g));
+												}
+	
+											}
+										}
+									}
+								}
+
+								int begin = temp.get(temp.size()-1).str.indexOf('>') + 1;
+
+
+								if (temp.get(temp.size()-1).indexesOfDelimiters.size() == 0)
+								{
+									temp.get(temp.size()-1).sectionsOfLine.add(new Section(temp.get(temp.size()-1).str.substring(begin)));
+								} 
+								else if (temp.get(temp.size()-1).indexesOfDelimiters.size() == 1)
+								{
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(begin, temp.get(temp.size()-1).indexesOfDelimiters.get(0))));
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(0) + 1)));
+								} 
+								else if (temp.get(temp.size()-1).indexesOfDelimiters.size() > 1)
+								{
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(begin, temp.get(temp.size()-1).indexesOfDelimiters.get(0))));
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(0) + 1)));
+									for (int k = 1; k < temp.get(temp.size()-1).indexesOfDelimiters.size(); k++)
+									{
+										temp.get(temp.size()-1).sectionsOfLine
+										.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(k - 1) + 1,
+												temp.get(temp.size()-1).indexesOfDelimiters.get(k))));
+									}
+								}
+							}
+							if(found1m != -1)
+							{
+								
+								temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(i).sectionsOfLine.get(j).part.substring(0, 1) + temp.get(found1m).str.charAt(0)));
+							}
+							else
+							{
+								char newChar = getNextChar();
+								temp.get(i).sectionsOfLine.set(j, new Section("" + temp.get(i).sectionsOfLine.get(j).part.substring(0, 1) + newChar));
+								
+								for (int b = 0; b < temp.size(); b++)
+								{
+									for (int l = 0; l < temp.get(b).sectionsOfLine.size(); l++)
+									{
+										for (int g = 0; g < temp.get(b).sectionsOfLine.get(l).characters.size(); l++)
+										{
+											if (Character.isUpperCase(temp.get(b).sectionsOfLine.get(l).characters.get(g)))
+											{
+												if (!currectChar.contains(temp.get(b).sectionsOfLine.get(l).characters.get(g)))
+												{
+													currectChar.add(temp.get(b).sectionsOfLine.get(l).characters.get(g));
+												}
+	
+											}
+										}
+									}
+								}
+
+								int begin = temp.get(temp.size()-1).str.indexOf('>') + 1;
+
+
+								if (temp.get(temp.size()-1).indexesOfDelimiters.size() == 0)
+								{
+									temp.get(temp.size()-1).sectionsOfLine.add(new Section(temp.get(temp.size()-1).str.substring(begin)));
+								} 
+								else if (temp.get(temp.size()-1).indexesOfDelimiters.size() == 1)
+								{
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(begin, temp.get(temp.size()-1).indexesOfDelimiters.get(0))));
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(0) + 1)));
+								} 
+								else if (temp.get(temp.size()-1).indexesOfDelimiters.size() > 1)
+								{
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(begin, temp.get(temp.size()-1).indexesOfDelimiters.get(0))));
+									temp.get(temp.size()-1).sectionsOfLine
+									.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(0) + 1)));
+									for (int k = 1; k < temp.get(temp.size()-1).indexesOfDelimiters.size(); k++)
+									{
+										temp.get(temp.size()-1).sectionsOfLine
+										.add(new Section(temp.get(temp.size()-1).str.substring(temp.get(temp.size()-1).indexesOfDelimiters.get(k - 1) + 1,
+												temp.get(temp.size()-1).indexesOfDelimiters.get(k))));
+									}
+								}
+							}
+						}
 					}
 				}
 			}
-			
-			
+
+
+			//Make start new Start Variable
+			String start = "" + "S0->";
+			for (int j = 0; j < temp.get(0).sectionsOfLine.size(); j++)
+			{
+				if (temp.get(0).sectionsOfLine.size() == 1)
+				{
+					start = start + temp.get(0).sectionsOfLine.get(j).part;
+
+				} 
+				else if (temp.get(0).sectionsOfLine.size() > 1 && j == temp.get(0).sectionsOfLine.size() - 1)
+				{
+					start = start + temp.get(0).sectionsOfLine.get(j).part;
+
+				} 
+				else if (temp.get(0).sectionsOfLine.size() > 1)
+				{
+					start = start + temp.get(0).sectionsOfLine.get(j).part + "|";
+
+				}
+			}
+
+			CNF.add(start);
+
+
+
 			//Put the Lines Back together from sections and add to final product
 			for (int i = 0; i < temp.size(); i++)
 			{
@@ -580,10 +715,12 @@ public class CFG_to_CNF
 					if (temp.get(i).sectionsOfLine.size() == 1)
 					{
 						st = st + temp.get(i).sectionsOfLine.get(j).part;
-					} else if (temp.get(i).sectionsOfLine.size() > 1 && j == temp.get(i).sectionsOfLine.size() - 1)
+					} 
+					else if (temp.get(i).sectionsOfLine.size() > 1 && j == temp.get(i).sectionsOfLine.size() - 1)
 					{
 						st = st + temp.get(i).sectionsOfLine.get(j).part;
-					} else if (temp.get(i).sectionsOfLine.size() > 1)
+					} 
+					else if (temp.get(i).sectionsOfLine.size() > 1)
 					{
 						st = st + temp.get(i).sectionsOfLine.get(j).part + "|";
 					}
