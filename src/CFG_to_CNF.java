@@ -20,16 +20,19 @@ public class CFG_to_CNF
 	 */
 	public static class Converter
 	{
+		//INSTANCE VARIABLES//
 		char[] Alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
 				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' }; // alphabet array
-		ArrayList<Character> currectChar = new ArrayList<Character>();// check track of used Variables
+		//check track of used Variables
+		ArrayList<Character> currectChar = new ArrayList<Character>();
 		ArrayList<String> CNF = new ArrayList<String>();// final string
 		int size;// size of temp array from string manipulation
-		
+
 		/*
 		 * Converter
 		 * 
 		 * ctor
+		 * 
 		 */
 		public Converter()
 		{
@@ -39,7 +42,10 @@ public class CFG_to_CNF
 		/*
 		 * convert
 		 * 
-		 * @return	Return an ArrayList of String
+		 * @param original arrayList of Strings
+		 * 
+		 * @return CNF ArrayList of Strings
+		 * 
 		 */
 		public ArrayList<String> convert(ArrayList<String> original)
 		{
@@ -77,11 +83,11 @@ public class CFG_to_CNF
 					CNF.add(One);
 					return CNF;
 				}
-				
-				//add to temp arrayList
+
+				// add to temp arrayList
 				temp.add(new Line(original.get(i)));
 
-				//populate Variable tracking arrayList
+				// populate Variable tracking arrayList
 				for (int l = 0; l < original.get(i).length(); l++)
 				{
 					if (Character.isUpperCase(original.get(i).charAt(l)))
@@ -95,7 +101,8 @@ public class CFG_to_CNF
 				}
 			}
 
-			// Populate Section of Line array with each lines respective sections
+			// Populate Section of Line array with each lines respective
+			// sections
 			for (int i = temp.size() - 1; i >= 0; i--)
 			{
 				int begin = temp.get(i).str.indexOf('>') + 1;
@@ -136,23 +143,21 @@ public class CFG_to_CNF
 			boolean check = true;
 			while (checkForEpsilon(temp) && check)
 			{
-				int checkI = -1;
 				for (int i = temp.size() - 1; i >= 0; i--)
 				{
 					for (int j = 0; j < temp.get(i).sectionsOfLine.size(); j++)
 					{
+
 						int tempIndex = temp.get(i).sectionsOfLine.get(j).characters.indexOf('\\');
 
-						if (i == 0)
+						if (tempIndex != -1 && i == 0)
 						{
-							checkI = 0;
 							tempChar = temp.get(i).str.charAt(0);
 							temp.get(i).sectionsOfLine.remove(j);
 							size = temp.size();
 							check = false;
 
-						}
-						else if (tempIndex != -1 && i != 0)
+						} else if (tempIndex != -1 && i != 0)
 						{
 							tempChar = temp.get(i).str.charAt(0);
 							temp.get(i).sectionsOfLine.remove(j);
@@ -174,14 +179,18 @@ public class CFG_to_CNF
 					{
 						for (int j = 0; j < temp.get(k).sectionsOfLine.size(); j++)
 						{
+
 							if (temp.get(k).sectionsOfLine.get(j).characters.contains(tempChar))
 							{
 								int tempIndex = temp.get(k).sectionsOfLine.get(j).characters.indexOf(tempChar);
+
 								if (tempIndex != -1)
 								{
+
 									if (tempIndex == 0 && temp.get(k).sectionsOfLine.get(j).characters.size() == 1)
 									{
-										if (k != 0 || checkI == 0)
+
+										if (k != 0)
 										{
 											temp.get(k).sectionsOfLine.add(new Section("\\"));
 										}
@@ -644,9 +653,18 @@ public class CFG_to_CNF
 
 			return CNF;
 		}// Convert
-
+		
+		/*
+		 * getNextChar
+		 * 
+		 * Find the next free Variable for the Left Hand Side
+		 * 
+		 * @return Next available char in alphabet
+		 * 
+		 */
 		public char getNextChar()
 		{
+			//LOCAL VARIABLES//
 			char nextChar = 'A';
 			int count = 0;
 
@@ -663,8 +681,18 @@ public class CFG_to_CNF
 			}
 
 			return '0';
-		}
+		}// getNextChar
 
+		/*
+		 * checkForEpsilon
+		 * 
+		 * Check if the temp array containing the current lines still has an epsilon
+		 * 
+		 * @param temp arrayList of Lies
+		 * 
+		 * @return boolean
+		 * 
+		 */
 		public boolean checkForEpsilon(ArrayList<Line> temp)
 		{
 			for (int i = 0; i < size; i++)
@@ -680,8 +708,16 @@ public class CFG_to_CNF
 				}
 			}
 			return false;
-		}
+		}// checkForEpsilon
 
+		/*
+		 * fixStrings
+		 * 
+		 * Run through the Sections of each line and update the string variable of each line based on the Sections
+		 * 
+		 * @param temp arrayList of Lines
+		 * 
+		 */
 		public void fixStrings(ArrayList<Line> temp)
 		{
 			for (int i = 0; i < temp.size(); i++)
@@ -702,8 +738,16 @@ public class CFG_to_CNF
 				}
 				temp.get(i).str = st;
 			}
-		}
+		}// fixStrings
 
+		/*
+		 * updateLatestCharUsed
+		 * 
+		 * Run through Lines and see which Variables are used
+		 * 
+		 * @param temp arrayList of Lines
+		 * 
+		 */
 		public void updateLatestCharUsed(ArrayList<Line> temp)
 		{
 			for (int b = 0; b < temp.size(); b++)
@@ -720,8 +764,16 @@ public class CFG_to_CNF
 					}
 				}
 			}
-		}
+		}// updateLatestCharUsed
 
+		/*
+		 * updateDelimiters
+		 * 
+		 * update the delimiters list for the new lines creates for new chars on the LHS
+		 * 
+		 * @param temp arrayList of Lines
+		 * 
+		 */
 		public void updateDelimiters(ArrayList<Line> temp)
 		{
 			int begin = temp.get(temp.size() - 1).str.indexOf('>') + 1;
@@ -749,8 +801,16 @@ public class CFG_to_CNF
 							temp.get(temp.size() - 1).indexesOfDelimiters.get(k))));
 				}
 			}
-		}
+		}// updateDelimiters
 
+		/*
+		 * removeDuplicates
+		 * 
+		 * Remove duplicate Sections from temp arrayList Lines
+		 * 
+		 * @param temp arraylist of Lines
+		 * 
+		 */
 		public void removeDuplicates(ArrayList<Line> temp)
 		{
 			// Remove duplicates
@@ -778,23 +838,44 @@ public class CFG_to_CNF
 				}
 			}
 
-		}
+		}// removeDeplicates
 
 	}
 
+	/**
+	 * Line
+	 * 
+	 * @author Christian
+	 *
+	 */
 	public static class Line
 	{
+		//INSTANCE VARIABLES//
 		public String str;
 		ArrayList<Integer> indexesOfDelimiters;
 		ArrayList<Section> sectionsOfLine;
 
+		/*
+		 * Line
+		 * 
+		 * ctor
+		 * 
+		 */
 		public Line(String str)
 		{
 			this.str = str;
 			this.indexesOfDelimiters = getIndexOf('|');
 			this.sectionsOfLine = new ArrayList<Section>();
-		}
+		}// ctor
 
+		/*
+		 * getIndexOf
+		 * 
+		 * @param s Char given
+		 * 
+		 * @return arrayList indexs of given char s
+		 * 
+		 */
 		public ArrayList<Integer> getIndexOf(char s)
 		{
 			ArrayList<Integer> indexList = new ArrayList<Integer>();
@@ -813,17 +894,36 @@ public class CFG_to_CNF
 
 	}
 
+	/**
+	 * Section
+	 * 
+	 * @author Christian
+	 *
+	 */
 	public static class Section
 	{
+		//INSTANCE VARIABLES//
 		ArrayList<Character> characters;
 		String part;
 
+		/*
+		 * Section
+		 * 
+		 * ctor
+		 * 
+		 */
 		public Section(String str)
 		{
 			this.part = str;
 			this.characters = getChars();
-		}
+		}// ctor
 
+		/*
+		 * getChars
+		 * 
+		 * make character list for the Section
+		 * 
+		 */
 		public ArrayList<Character> getChars()
 		{
 			ArrayList<Character> charList = new ArrayList<Character>();
@@ -843,6 +943,12 @@ public class CFG_to_CNF
 
 	}
 
+	/*
+	 * fileSector
+	 * 
+	 * GUI for file selection
+	 * 
+	 */
 	public static File fileSelector()
 	{
 		JFileChooser fc = new JFileChooser();
@@ -860,7 +966,7 @@ public class CFG_to_CNF
 		}
 
 		return selectedFile;
-	}
+	}// fileSelector
 
 	public static void main(String[] args)
 	{
